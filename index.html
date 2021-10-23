@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
+            rel="stylesheet"
+        />
+        <title>Tip Calculator</title>
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+    <body>
+        <h1 class="center">Tip Calculator</h1>
+        <div class="layout">
+            <div class="box">
+                <h1>Bill</h1>
+                <input type="number" id="bill" placeholder="Bill" />
+                <h1>Tip %</h1>
+
+                <div class="plus-minus">
+                    <button class="minus" id="tipMinus">-</button>
+                    <input
+                        type="number"
+                        placeholder="Tip %"
+                        id="tipPercentage"
+                    />
+                    <button class="plus" id="tipPlus">+</button>
+                </div>
+
+                <h1>Number of People</h1>
+                <div class="plus-minus">
+                    <button class="minus" id="peopleMinus">-</button>
+                    <input
+                        type="number"
+                        id="numberOfPeople"
+                        placeholder="Number of People"
+                    />
+                    <button class="plus" id="peoplePlus">+</button>
+                </div>
+            </div>
+            <div class="note">
+                <div>
+                    <h2>Tip</h2>
+                    <span>Per Person</span>
+                </div>
+                <h1 id="per-person">0.00</h1>
+
+                <div>
+                    <h2>Total</h2>
+                    <span>Per Person</span>
+                </div>
+                <h1 id="total-bill">0.00</h1>
+
+                <div class="save-btn">
+                    <button id="save-btn">Save Receipt</button>
+                </div>
+            </div>
+        </div>
+        <div class="receipt">
+            <h3>Receipts</h3>
+            <ul id="add-Receipt"></ul>
+            <button id="delete-btn">Delete All Receipt</button>
+        </div>
+        <script type="text/javascript" src="index.js"></script>
+    </body>
+</html>
