@@ -16,19 +16,22 @@ class TipCalculator {
         this.saveBtn = document.getElementById('save-btn');
         this.addReceipt = document.getElementById('add-Receipt');
         this.deleteBtn = document.getElementById('delete-btn');
+        this.error = document.getElementsByClassName('error');
     }
 
+    // Calculates tip per person and total per person
     calculate = () => {
         this.perPersonBill = (
-            (parseInt(this.bill.value) *
-                (parseInt(this.tipPercentage.value) / 100)) /
+            (parseFloat(this.bill.value) *
+                (parseFloat(this.tipPercentage.value) / 100)) /
             parseInt(this.numberOfPeople.value)
         ).toFixed(2);
         this.perPerson.innerHTML = '$' + this.perPersonBill;
         this.total = (
-            (parseInt(this.bill.value) +
-                parseInt(
-                    this.bill.value * (parseInt(this.tipPercentage.value) / 100)
+            (parseFloat(this.bill.value) +
+                parseFloat(
+                    parseFloat(this.bill.value) *
+                        (parseFloat(this.tipPercentage.value) / 100)
                 )) /
             parseInt(this.numberOfPeople.value)
         ).toFixed(2);
@@ -36,6 +39,8 @@ class TipCalculator {
         console.log(this.perPersonBill, this.total);
     };
 
+
+    // Checks all inputs and avoids invalid input
     checkInputs = () => {
         if (this.bill.value < 0 || this.bill.value === '') {
             this.bill.value = 0;
@@ -52,6 +57,7 @@ class TipCalculator {
         this.calculate();
     };
 
+    // Increase Tip by value one by clicking on + button 
     increaseTip = () => {
         this.checkInputs();
         if (this.tipPercentage.value === '') {
@@ -63,9 +69,10 @@ class TipCalculator {
             this.tipPercentage.value++;
         }
         console.log(this.tipPercentage.value);
-        // calculate();
+        this.calculate();
     };
 
+    // Decrease Tip by value one by clicking on - button 
     decreaseTip = () => {
         this.checkInputs();
         if (this.tipPercentage.value === '') {
@@ -76,10 +83,11 @@ class TipCalculator {
         } else {
             this.tipPercentage.value--;
         }
-        // console.log(this.tipPercentage.value);
+ 
         this.calculate();
     };
 
+    // Increase Number of People by value one by clicking on + button 
     increasePeople = () => {
         this.checkInputs();
         if (this.numberOfPeople.value === '') {
@@ -90,10 +98,10 @@ class TipCalculator {
         } else {
             this.numberOfPeople.value++;
         }
-        // console.log(numberOfPeople.value);
         this.calculate();
     };
 
+    // Decrease Number of People by value one by clicking on - button 
     decreasePeople = () => {
         this.checkInputs();
         if (this.numberOfPeople.value === '') {
@@ -104,40 +112,40 @@ class TipCalculator {
         } else {
             this.numberOfPeople.value--;
         }
-        // console.log(this.numberOfPeople.value);
         this.calculate();
     };
 
+    // Save Data to local storage after checking output values
     saveReceipt = () => {
-        console.log(typeof this.perPersonBill, this.total);
+
         if (
-            this.perPersonBill === 'NaN' ||
-            this.perPersonBill === 'Infinity' ||
-            this.total === 'NaN' ||
-            this.total === 'Infinity' ||
-            this.perPersonBill === 0 ||
-            this.total === 0 ||
-            (this.perPersonBill === '0.00' && this.total === '0.00')
+            parseFloat(this.perPersonBill) === 0 &&
+            parseFloat(this.total) === 0
         ) {
-            console.log('Hell');
+            this.error[0].style.display = '';
         } else {
             this.storage.push({
                 perPersonBill: this.perPersonBill,
                 total: this.total,
+                bill: parseFloat(this.bill.value),
+                tipPercentage: this.tipPercentage.value,
+                numberOfPeople: this.numberOfPeople.value,
             });
             localStorage.setItem('Receipts', JSON.stringify(this.storage));
             this.addDataToReceipt();
             this.bill.value = 0;
             this.tipPercentage.value = 0;
             this.numberOfPeople.value = 1;
-            this.perPerson.innerHTML = '0.00';
-            this.totalBill.innerHTML = '0.00';
+            this.perPerson.innerHTML = '$0.00';
+            this.totalBill.innerHTML = '$0.00';
             this.perPersonBill = 0;
             this.total = 0;
+            this.error[0].style.display = 'none';
         }
         this.deleteBtn.style.display = '';
     };
 
+    // Get local storage data on window load and adds to storage variable
     getLocalReceipt = () => {
         console.log(localStorage.getItem('Receipts'));
         if (localStorage.getItem('Receipts') === null) {
@@ -146,28 +154,35 @@ class TipCalculator {
             let LocalReceipts = JSON.parse(localStorage.getItem('Receipts'));
             this.storage = LocalReceipts;
         }
+        this.error[0].style.display = 'none';
     };
+
+    // Adds local storage Data to receipt div
     addDataToReceipt = () => {
         this.addReceipt.innerHTML = `${this.storage
             .map(
                 (data) =>
                     `<li>
-                
+                    <span>Bill : </span>
+                    <span>${data.bill}</span>
+                    <br/>
+                    <span>Tip Percentage : </span>
+                    <span>${data.tipPercentage}</span>
+                    <br/>
+                    <span>Number Of People : </span>
+                    <span>${data.numberOfPeople}</span>
+                    <br/>
                     <span>Tip Per Person : </span>
-        
-            
-                <span>${data.perPersonBill}</span>
-                <br/>
-            
+                    <span>${data.perPersonBill}</span>
+                    <br/>
                     <span>Total Per Person : </span>
-                    
-            
-                <span>${data.total}</span>
+                    <span>${data.total}</span>
             </li>`
             )
             .join('')}`;
     };
 
+    // Deletes all receipt data from local storage and receipt div
     deleteAllReceipts = () => {
         localStorage.removeItem('Receipts');
         this.storage = [];
@@ -175,18 +190,18 @@ class TipCalculator {
         this.deleteBtn.style.display = 'none';
     };
 
-    test = () => {
-        console.log(this.tipPercentage, this.numberOfPeople.value);
-    };
 }
 
+// Object initialization
 let T = new TipCalculator();
 
+// Runs on every window load
 window.onload = () => {
     T.getLocalReceipt();
     T.addDataToReceipt();
 };
 
+// Event Listeners
 T.bill.addEventListener('input', () => T.checkInputs());
 T.tipPercentage.addEventListener('input', () => T.checkInputs());
 T.numberOfPeople.addEventListener('input', () => T.checkInputs());
@@ -196,8 +211,3 @@ T.peoplePlus.addEventListener('click', () => T.increasePeople());
 T.peopleMinus.addEventListener('click', () => T.decreasePeople());
 T.saveBtn.addEventListener('click', () => T.saveReceipt());
 T.deleteBtn.addEventListener('click', () => T.deleteAllReceipts());
-
-// T.increaseTip();
-// T.increaseTip();
-// T.increaseTip();
-// T.increaseTip();
