@@ -1,176 +1,203 @@
-const bill = document.getElementById('bill');
-let tipPercentage = document.getElementById('tipPercentage');
-let numberOfPeople = document.getElementById('numberOfPeople');
-const tipMinus = document.getElementById('tipMinus');
-const tipPlus = document.getElementById('tipPlus');
-const peopleMinus = document.getElementById('peopleMinus');
-const peoplePlus = document.getElementById('peoplePlus');
-const perPerson = document.getElementById('per-person');
-const totalBill = document.getElementById('total-bill');
-const saveBtn = document.getElementById('save-btn');
-const addReceipt = document.getElementById('add-Receipt');
-const deleteBtn = document.getElementById('delete-btn');
-// console.log(bill, numberOfPeople);
-let total = 0,
-    perPersonBill = 0,
-    storage = [];
+class TipCalculator {
+    constructor() {
+        this.total = 0;
+        this.perPersonBill = 0;
+        this.storage = [];
 
-const increaseTip = () => {
-    checkInputs();
-    if (tipPercentage.value === '') {
-        tipPercentage.value = 0;
+        this.tipPercentage = document.getElementById('tipPercentage');
+        this.numberOfPeople = document.getElementById('numberOfPeople');
+        this.bill = document.getElementById('bill');
+        this.tipMinus = document.getElementById('tipMinus');
+        this.tipPlus = document.getElementById('tipPlus');
+        this.peopleMinus = document.getElementById('peopleMinus');
+        this.peoplePlus = document.getElementById('peoplePlus');
+        this.perPerson = document.getElementById('per-person');
+        this.totalBill = document.getElementById('total-bill');
+        this.saveBtn = document.getElementById('save-btn');
+        this.addReceipt = document.getElementById('add-Receipt');
+        this.deleteBtn = document.getElementById('delete-btn');
     }
-    if (parseInt(tipPercentage.value) === 100) {
-        tipPercentage.value = 0;
-    } else {
-        tipPercentage.value++;
-    }
-    // console.log(tipPercentage.value);
-    calculate();
-};
 
-const decreaseTip = () => {
-    checkInputs();
-    if (tipPercentage.value === '') {
-        tipPercentage.value = 1;
-    }
-    if (tipPercentage.value == 0) {
-        tipPercentage.value = 0;
-    } else {
-        tipPercentage.value--;
-    }
-    // console.log(tipPercentage.value);
-    calculate();
-};
+    calculate = () => {
+        this.perPersonBill = (
+            (parseInt(this.bill.value) *
+                (parseInt(this.tipPercentage.value) / 100)) /
+            parseInt(this.numberOfPeople.value)
+        ).toFixed(2);
+        this.perPerson.innerHTML = '$' + this.perPersonBill;
+        this.total = (
+            (parseInt(this.bill.value) +
+                parseInt(
+                    this.bill.value * (parseInt(this.tipPercentage.value) / 100)
+                )) /
+            parseInt(this.numberOfPeople.value)
+        ).toFixed(2);
+        this.totalBill.innerText = '$' + this.total;
+        console.log(this.perPersonBill, this.total);
+    };
 
-const increasePeople = () => {
-    checkInputs();
-    if (numberOfPeople.value === '') {
-        numberOfPeople.value = 0;
-    }
-    if (parseInt(numberOfPeople.value) === 100) {
-        numberOfPeople.value = 1;
-    } else {
-        numberOfPeople.value++;
-    }
-    // console.log(numberOfPeople.value);
-    calculate();
-};
+    checkInputs = () => {
+        if (this.bill.value < 0 || this.bill.value === '') {
+            this.bill.value = 0;
+        }
+        if (this.tipPercentage.value < 0 || this.tipPercentage.value === '') {
+            this.tipPercentage.value = 0;
+        }
+        if (
+            this.numberOfPeople.value <= 0 ||
+            this.numberOfPeople.value === ''
+        ) {
+            this.numberOfPeople.value = 1;
+        }
+        this.calculate();
+    };
 
-const decreasePeople = () => {
-    checkInputs();
-    if (numberOfPeople.value === '') {
-        numberOfPeople.value = 2;
-    }
-    if (numberOfPeople.value == 1) {
-        numberOfPeople.value = 1;
-    } else {
-        numberOfPeople.value--;
-    }
-    // console.log(numberOfPeople.value);
-    calculate();
-};
+    increaseTip = () => {
+        this.checkInputs();
+        if (this.tipPercentage.value === '') {
+            this.tipPercentage.value = 0;
+        }
+        if (parseInt(this.tipPercentage.value) === 100) {
+            this.tipPercentage.value = 0;
+        } else {
+            this.tipPercentage.value++;
+        }
+        console.log(this.tipPercentage.value);
+        // calculate();
+    };
 
-const calculate = () => {
-    perPersonBill = (
-        (parseInt(bill.value) * (parseInt(tipPercentage.value) / 100)) /
-        parseInt(numberOfPeople.value)
-    ).toFixed(2);
-    perPerson.innerHTML = perPersonBill;
-    total = (
-        (parseInt(bill.value) +
-            parseInt(bill.value * (parseInt(tipPercentage.value) / 100))) /
-        parseInt(numberOfPeople.value)
-    ).toFixed(2);
-    totalBill.innerText = total;
-};
+    decreaseTip = () => {
+        this.checkInputs();
+        if (this.tipPercentage.value === '') {
+            this.tipPercentage.value = 1;
+        }
+        if (this.tipPercentage.value == 0) {
+            this.tipPercentage.value = 0;
+        } else {
+            this.tipPercentage.value--;
+        }
+        // console.log(this.tipPercentage.value);
+        this.calculate();
+    };
 
-const saveReceipt = () => {
-    console.log(typeof perPersonBill, total);
-    if (
-        perPersonBill === 'NaN' ||
-        perPersonBill === 'Infinity' ||
-        total === 'NaN' ||
-        total === 'Infinity' ||
-        perPersonBill === 0 ||
-        total === 0 ||
-        (perPersonBill === '0.00' && total === '0.00')
-    ) {
-        console.log('Hell');
-    } else {
-        storage.push({ perPersonBill, total });
-        localStorage.setItem('Receipts', JSON.stringify(storage));
-        addDataToReceipt();
-        bill.value = 0;
-        tipPercentage.value = 0;
-        numberOfPeople.value = 1;
-        perPerson.innerHTML = '0.00';
-        totalBill.innerHTML = '0.00';
-        perPersonBill = 0;
-        total = 0;
-    }
-};
+    increasePeople = () => {
+        this.checkInputs();
+        if (this.numberOfPeople.value === '') {
+            this.numberOfPeople.value = 0;
+        }
+        if (parseInt(this.numberOfPeople.value) === 100) {
+            this.numberOfPeople.value = 1;
+        } else {
+            this.numberOfPeople.value++;
+        }
+        // console.log(numberOfPeople.value);
+        this.calculate();
+    };
 
-const getLocalReceipt = () => {
-    console.log(localStorage.getItem('Receipts'));
-    if (localStorage.getItem('Receipts') === null) {
-        localStorage.setItem('Receipts', JSON.stringify([]));
-    } else {
-        let LocalReceipts = JSON.parse(localStorage.getItem('Receipts'));
-        storage = LocalReceipts;
-    }
-};
-const addDataToReceipt = () => {
-    addReceipt.innerHTML = `${storage
-        .map(
-            (data) =>
-                `<li>
-               
-                    <span>Tip Per Person</span>
-               
-           
+    decreasePeople = () => {
+        this.checkInputs();
+        if (this.numberOfPeople.value === '') {
+            this.numberOfPeople.value = 2;
+        }
+        if (this.numberOfPeople.value == 1) {
+            this.numberOfPeople.value = 1;
+        } else {
+            this.numberOfPeople.value--;
+        }
+        // console.log(this.numberOfPeople.value);
+        this.calculate();
+    };
+
+    saveReceipt = () => {
+        console.log(typeof this.perPersonBill, this.total);
+        if (
+            this.perPersonBill === 'NaN' ||
+            this.perPersonBill === 'Infinity' ||
+            this.total === 'NaN' ||
+            this.total === 'Infinity' ||
+            this.perPersonBill === 0 ||
+            this.total === 0 ||
+            (this.perPersonBill === '0.00' && this.total === '0.00')
+        ) {
+            console.log('Hell');
+        } else {
+            this.storage.push({
+                perPersonBill: this.perPersonBill,
+                total: this.total,
+            });
+            localStorage.setItem('Receipts', JSON.stringify(this.storage));
+            this.addDataToReceipt();
+            this.bill.value = 0;
+            this.tipPercentage.value = 0;
+            this.numberOfPeople.value = 1;
+            this.perPerson.innerHTML = '0.00';
+            this.totalBill.innerHTML = '0.00';
+            this.perPersonBill = 0;
+            this.total = 0;
+        }
+        this.deleteBtn.style.display = '';
+    };
+
+    getLocalReceipt = () => {
+        console.log(localStorage.getItem('Receipts'));
+        if (localStorage.getItem('Receipts') === null) {
+            localStorage.setItem('Receipts', JSON.stringify([]));
+        } else {
+            let LocalReceipts = JSON.parse(localStorage.getItem('Receipts'));
+            this.storage = LocalReceipts;
+        }
+    };
+    addDataToReceipt = () => {
+        this.addReceipt.innerHTML = `${this.storage
+            .map(
+                (data) =>
+                    `<li>
+                
+                    <span>Tip Per Person : </span>
+        
+            
                 <span>${data.perPersonBill}</span>
                 <br/>
-             
-                    <span>Total Per Person</span>
+            
+                    <span>Total Per Person : </span>
                     
-             
+            
                 <span>${data.total}</span>
             </li>`
-        )
-        .join('')}`;
-};
+            )
+            .join('')}`;
+    };
 
-const deleteAllReceipts = () => {
-    localStorage.removeItem('Receipts');
-    storage = [];
-    addDataToReceipt();
-};
+    deleteAllReceipts = () => {
+        localStorage.removeItem('Receipts');
+        this.storage = [];
+        this.addDataToReceipt();
+        this.deleteBtn.style.display = 'none';
+    };
 
-const checkInputs = () => {
-    if (bill.value < 0 || bill.value === '') {
-        bill.value = 0;
-    }
-    if (tipPercentage.value < 0 || tipPercentage.value === '') {
-        tipPercentage.value = 0;
-    }
-    if (numberOfPeople.value <= 0 || numberOfPeople.value === '') {
-        numberOfPeople.value = 1;
-    }
-    calculate();
-};
+    test = () => {
+        console.log(this.tipPercentage, this.numberOfPeople.value);
+    };
+}
+
+let T = new TipCalculator();
 
 window.onload = () => {
-    getLocalReceipt();
-    addDataToReceipt();
+    T.getLocalReceipt();
+    T.addDataToReceipt();
 };
 
-bill.addEventListener('input', () => checkInputs());
-tipPercentage.addEventListener('input', () => checkInputs());
-numberOfPeople.addEventListener('input', () => checkInputs());
-tipPlus.addEventListener('click', () => increaseTip());
-tipMinus.addEventListener('click', () => decreaseTip());
-peoplePlus.addEventListener('click', () => increasePeople());
-peopleMinus.addEventListener('click', () => decreasePeople());
-saveBtn.addEventListener('click', () => saveReceipt());
-deleteBtn.addEventListener('click', () => deleteAllReceipts());
+T.bill.addEventListener('input', () => T.checkInputs());
+T.tipPercentage.addEventListener('input', () => T.checkInputs());
+T.numberOfPeople.addEventListener('input', () => T.checkInputs());
+T.tipPlus.addEventListener('click', () => T.increaseTip());
+T.tipMinus.addEventListener('click', () => T.decreaseTip());
+T.peoplePlus.addEventListener('click', () => T.increasePeople());
+T.peopleMinus.addEventListener('click', () => T.decreasePeople());
+T.saveBtn.addEventListener('click', () => T.saveReceipt());
+T.deleteBtn.addEventListener('click', () => T.deleteAllReceipts());
+
+// T.increaseTip();
+// T.increaseTip();
+// T.increaseTip();
+// T.increaseTip();

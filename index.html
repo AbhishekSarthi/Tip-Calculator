@@ -7,14 +7,14 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,400;1,500&display=swap"
             rel="stylesheet"
         />
         <title>Tip Calculator</title>
         <link rel="stylesheet" type="text/css" href="index.css" />
     </head>
     <body>
-        <h1 class="center">Tip Calculator</h1>
+        <h1 class="center underline">Tip Calculator</h1>
         <div class="layout">
             <div class="box">
                 <h1>Bill</h1>
@@ -47,13 +47,13 @@
                     <h2>Tip</h2>
                     <span>Per Person</span>
                 </div>
-                <h1 id="per-person">0.00</h1>
+                <h1 id="per-person">$0.00</h1>
 
                 <div>
                     <h2>Total</h2>
                     <span>Per Person</span>
                 </div>
-                <h1 id="total-bill">0.00</h1>
+                <h1 id="total-bill">$0.00</h1>
 
                 <div class="save-btn">
                     <button id="save-btn">Save Receipt</button>
@@ -61,10 +61,10 @@
             </div>
         </div>
         <div class="receipt">
-            <h3>Receipts</h3>
+            <h3 class="underline">Receipts</h3>
             <ul id="add-Receipt"></ul>
             <button id="delete-btn">Delete All Receipt</button>
         </div>
-        <script type="text/javascript" src="index.js"></script>
+        <script type="text/javascript" src="app.js"></script>
     </body>
 </html>
