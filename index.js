@@ -36,7 +36,7 @@ class TipCalculator {
             parseInt(this.numberOfPeople.value)
         ).toFixed(2);
         this.totalBill.innerText = '$' + this.total;
-        console.log(this.perPersonBill, this.total);
+
     };
 
 
@@ -68,7 +68,7 @@ class TipCalculator {
         } else {
             this.tipPercentage.value++;
         }
-        console.log(this.tipPercentage.value);
+
         this.calculate();
     };
 
@@ -147,7 +147,7 @@ class TipCalculator {
 
     // Get local storage data on window load and adds to storage variable
     getLocalReceipt = () => {
-        console.log(localStorage.getItem('Receipts'));
+
         if (localStorage.getItem('Receipts') === null) {
             localStorage.setItem('Receipts', JSON.stringify([]));
         } else {
